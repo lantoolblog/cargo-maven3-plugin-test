@@ -1,0 +1,44 @@
+HELP.md
+target/
+# 컴파일된 jasper 파일 
+**/webapp/WEB-INF/jasper/*.jasper
+
+
+# maven-wrapper.properties 만 있어도 jar를 maven-wrapper.jar 를 자동으로 다운로드 받는다.
+.mvn/wrapper/*
+!.mvn/wrapper/maven-wrapper.properties
+
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.dbeaver
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+bin/
+.apt_generated_tests/
+.factorypath

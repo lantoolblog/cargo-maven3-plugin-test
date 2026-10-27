@@ -1,0 +1,12 @@
+version: "0.2"
+ignorePaths: 
+  - mvnw
+  - mvnw.cmd
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - Dcargo
+  - Dskip
+  - findstr
+ignoreWords: []
+import: []

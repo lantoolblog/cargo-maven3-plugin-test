@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+  <!-- Appenders -->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{72} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Application Loggers -->
+  <logger name="com.lantoolblog.sample" level="debug" />
+
+  <!-- Root Logger -->
+  <root level="warn">
+    <appender-ref ref="console" />
+  </root>
+
+</configuration>
