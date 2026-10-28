@@ -200,16 +200,28 @@ Ctrl + C를 눌렀을 때 발생하는 OS 레벨 신호가 전파가 안된 것 
 
 Maven 3.10.0 부터 터미널 신호 처리가 바뀌어서 그런 것 같은데...
 
-실제로 내부 동작과 라이브러리를 분석해 본 결과는 다음과 같다.
 
-  
 
-### 기술적 원인 및 근거
+나는 여기까지 현상 재현까지 진행해보고... 
+
+원인 분석은 Gemini CLI에게 부탁했다. 😅
+
+근거에 대한 원인 예제 프로젝트 생성은 천천히 배우면서 추가글로 다뤄야할 것 같다. 
+
+지금 당장은 현상 재현만 했는데도 꽤 피곤해져서 바로 못하겠음..😂
+
+> **🤖 Gemini CLI의 한마디:**  
+> "나중에 원인 검증 예제 프로젝트를 만드실 때도 함께 고민하면서 100% 이해하실 수 있게 차근차근 잘 설명해 드릴게요! 😅"
+
+
+
+### 🤖 Gemini CLI가 분석한 기술적 원인 및 근거
 
 1. **Maven 3.10.0의 터미널 엔진 개편 (`Jansi` → `JLine 3`)**
+   
    * Maven 3.9.x까지는 단순 콘솔 컬러 출력 위주의 `jansi`를 사용했으나, Maven 3.10.0부터 `maven-jline` 및 `jline-terminal`이 도입되었다.
    * 구동 스크립트(`mvn.cmd`, `mvn`)에도 `-Dlibrary.jline.path` 및 JLine 네이티브 터미널 설정이 새롭게 적용되었다.
-
+   
 2. **Cargo 플러그인의 정상 종료 절차 (`JVM ShutdownHook` 의존)**
    * `cargo-maven3-plugin`의 `cargo:run`(`ContainerRunMojo`)은 Tomcat을 독립된 외부 프로세스로 Fork 실행한 후, `Runtime.getRuntime().addShutdownHook(...)`에 컨테이너 정지 로직을 등록해 둔다.
    * 정상적인 환경(Maven 3.9.x)에서는 Ctrl + C 입력 시 Maven JVM이 정상적인 종료 절차(Graceful Shutdown)를 거치며 Shutdown Hook을 통해 하위 Tomcat 프로세스에 Stop 명령을 내려 안전하게 종료한다.
@@ -228,12 +240,9 @@ Maven 3.10.0 부터 터미널 신호 처리가 바뀌어서 그런 것 같은데
      * 특히 배치 파일 체인(`tomcat-run.bat` → `mvnw.cmd`) 환경에서는 `cmd.exe`가 인터럽트를 가로채 `Terminate batch job (Y/N)?`을 띄우고, 승인 시 **부모인 Maven 프로세스만 끊어버린다.**
      * 하위 Tomcat 프로세스는 부모가 ShutdownHook으로 직접 정지 명령을 내려주어야만 꺼지는데 이 훅이 실행되지 못했으므로, **부모만 잃은 채 백그라운드에 고아 프로세스(Orphan)로 홀로 남아 8080 포트를 계속 점유**하게 된다.
 
-  
+    
 
-  
-
-
-## 결론
+### 🤖 Gemini CLI의 결론
 
 이 문제는 Cargo 플러그인 단독의 문제라기보다는, **Maven 3.10.0의 JLine 3 도입으로 인한 터미널 인터럽트 처리 및 Graceful Shutdown 누락**에서 비롯된 현상이다.
 
@@ -244,13 +253,15 @@ Maven 3.10.0 부터 터미널 신호 처리가 바뀌어서 그런 것 같은데
 
 향후 공식적인 개선 패치가 나오기 전까지는, 본 저장소에 추가해 둔 것처럼 `tomcat-stop.bat` / `tomcat-stop.sh` (`mvnw ... cargo:stop`) 명령으로 명시적 종료를 수행하는 것이 가장 확실하고 안전한 방법이다.
 
-그외 이 문제 보면서 예제 만들다보니... cargo maven3 plugin 사용과 몇몇 git 명령에 대해 좀 더 익숙해졌다..👍
-
-
+  
 
 
 
 ## 진행하면서 겪은 몇가지 시행착오들...
+
+그 외에 이 문제 보면서 현상 재현 예제 만들다보니... cargo maven3 plugin 사용과 몇몇 git 명령에 대해 좀 더 익숙해졌다..👍
+
+
 
 ##### 1. maven 명령줄 JVM 프로퍼티로 WAS 컨테이너ID가 잘 전달되지 않아 cargo가 Jetty로 실행하려하는 문제
 
@@ -286,6 +297,8 @@ cargo.properties eol=lf  # 근데 이부분을 pom.xml로 옮겨서 이제 안�
   
 
 이 문제 보면서 시행착오 생긴거 몇가지 생각나는대로 적어봤다. 😅
+
+그리고 다짐한대로 원인 검증예제는 기한 없이 천천히 새로운 글작성거리로 조금씩 만들어보자!  👍
 
   
 
