@@ -3,5 +3,3 @@
 *.cmd text eol=crlf
 
 mvnw text eol=lf
-
-cargo.properties eol=lf
