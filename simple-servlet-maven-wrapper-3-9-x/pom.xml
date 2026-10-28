@@ -29,7 +29,16 @@
 
     <maven-war-plugin.version>3.5.1</maven-war-plugin.version>
     <cargo-maven3-plugin.version>1.10.29</cargo-maven3-plugin.version>
-    <cargoContextPath>${project.artifactId}</cargoContextPath>
+    <cargo.container.id>tomcat10x</cargo.container.id>
+    <cargo.tomcat.version>10.1.61</cargo.tomcat.version>
+    <cargo.tomcat.download.url><![CDATA[https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo.tomcat.version}/tomcat-${cargo.tomcat.version}.zip]]></cargo.tomcat.download.url>
+    <cargo.servlet.port>8080</cargo.servlet.port>
+    <cargo.jvmargs><![CDATA[
+      -Dfile.encoding=UTF-8
+      --add-opens=java.base/java.lang=ALL-UNNAMED
+      --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+    ]]></cargo.jvmargs>
+    <cargo.context.path>/</cargo.context.path>
   </properties>
 
   <dependencies>
@@ -97,10 +106,23 @@
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven3-plugin</artifactId>
         <configuration>
+          <container>
+            <containerId>${cargo.container.id}</containerId>
+            <type>installed</type>
+            <zipUrlInstaller>
+              <url>${cargo.tomcat.download.url}</url>
+            </zipUrlInstaller>
+          </container>
+          <configuration>
+            <properties>
+              <cargo.servlet.port>${cargo.servlet.port}</cargo.servlet.port>
+              <cargo.jvmargs>${cargo.jvmargs}</cargo.jvmargs>
+            </properties>
+          </configuration>
           <deployables>
             <deployable>
               <properties>
-                <context>${cargoContextPath}</context>
+                <context>${cargo.context.path}</context>
               </properties>
             </deployable>
           </deployables>
