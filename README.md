@@ -304,5 +304,52 @@ cargo.properties eol=lf  # 근데 이부분을 pom.xml로 옮겨서 이제 안�
 
   
 
+## Maven 4 RC 7에서는 Tocmat 종료가 됨...😅
+
+> 특이하다 특이해...
+>
+> Maven 4 환경에서도 3.10.0과 같이 똑같이 Tomcat이 종료가 안될 것이라 생각했었는데..
+>
+> Maven 4.0.0 RC7에서는 Tomcat 프로세스가 꺼지긴 한다...
+>
+> 💡기본 페이즈를 실행하는 플러그인 버전은 고정하지않고 Maven 4의 최신 환경에 맞게 알아서 자동선택하라고 고정하진 않았다.
+>
+> * https://github.com/lantoolblog/cargo-maven3-plugin-test/tree/master/simple-servlet-maven-wrapper-4-0-x
+
+![image-20261030063115357](images/image-20261030063115357.png)
+
+```
+[INFO] Tomcat 10.1.61 started on port [8080]
+[INFO] Press Ctrl-C to stop the container...
+Exception in thread "Thread-1" java.lang.IllegalStateException: Terminal has been closed
+        at org.jline.terminal.impl.AbstractTerminal.checkClosed(AbstractTerminal.java:1172)
+        at org.jline.terminal.impl.AbstractWindowsTerminal.writer(AbstractWindowsTerminal.java:247)
+        at org.apache.maven.cling.invoker.LookupInvoker.lambda$doDetermineWriter$0(LookupInvoker.java:437)
+        at org.apache.maven.logging.AsyncDrainWriter.drain(AsyncDrainWriter.java:88)
+        at org.apache.maven.logging.AsyncDrainWriter.tryDrain(AsyncDrainWriter.java:68)
+        at org.apache.maven.logging.AsyncDrainWriter.accept(AsyncDrainWriter.java:56)
+        at org.apache.maven.logging.AsyncDrainWriter.accept(AsyncDrainWriter.java:43)
+        at org.apache.maven.logging.SimpleBuildEventListener.log(SimpleBuildEventListener.java:62)
+        at org.apache.maven.logging.SimpleBuildEventListener.projectLogMessage(SimpleBuildEventListener.java:42)
+        at org.apache.maven.logging.ProjectBuildLogAppender.accept(ProjectBuildLogAppender.java:130)
+        at org.apache.maven.slf4j.MavenSimpleLogger.write(MavenSimpleLogger.java:76)
+        at org.apache.maven.slf4j.MavenBaseLogger.innerHandleNormalizedLoggingCall(MavenBaseLogger.java:378)
+        at org.apache.maven.slf4j.MavenBaseLogger.handleNormalizedLoggingCall(MavenBaseLogger.java:309)
+        at org.slf4j.helpers.AbstractLogger.handle_0ArgsCall(AbstractLogger.java:382)
+        at org.slf4j.helpers.AbstractLogger.warn(AbstractLogger.java:287)
+        at org.apache.maven.slf4j.MavenFailOnSeverityLogger.warn(MavenFailOnSeverityLogger.java:78)
+        at org.apache.maven.plugin.internal.MojoLogWrapper.warn(MojoLogWrapper.java:91)
+        at org.codehaus.cargo.maven3.ContainerRunMojo$1.run(ContainerRunMojo.java:100)
+Terminate batch job (Y/N)? 
+```
+
+윈도우 + Maven 4.0.0 RC7 환경에서 Ctrl + C로 종료시켰을 때, Tomcat이 종료되고 고아 프로세스로 남지 않았다.
+
+그런데 스택을 보니 진짜 jline을 사용하긴하는구나...
+
+  
+
+  
+
 * 게시일: 2026-10-28-a
 * 퍼머링크: vscode-java-and-kotlin-by-intellij-idea-extension-review
