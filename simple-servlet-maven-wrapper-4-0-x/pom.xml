@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.1.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd"
+         root="true">
+  <modelVersion>4.1.0</modelVersion>
+
+  <groupId>com.lantoolblog.sample</groupId>
+  <artifactId>simple-servlet-maven-wrapper-4-0-x</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <packaging>war</packaging>
+  <name>${project.artifactId}</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>21</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
+    <jakarta-servlet-api.version>3.1.1</jakarta-servlet-api.version>
+    <jakarta-servlet-jsp-jstl-api.version>3.0.2</jakarta-servlet-jsp-jstl-api.version>
+    <jakarta-servlet-jsp-jstl.version>3.0.1</jakarta-servlet-jsp-jstl.version>
+
+    <java-time-jsptags.version>2.0.2</java-time-jsptags.version>
+
+    <slf4j.version>2.0.17</slf4j.version>
+    <logback.version>1.6.5</logback.version>
+    
+    <!-- 
+      💡기본 페이즈에 대한 플러그인 버전에 대해서는
+        Maven 4.0.0 에 맞는 최신 플러그인 버전을 쓰도록 일단은 버전정의를 하지 말아보자!
+    -->
+    <!--
+    <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+    <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>    
+    <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.6.1</maven-surefire-plugin.version>
+    <maven-war-plugin.version>3.5.1</maven-war-plugin.version>
+    -->
+
+    <cargo-maven3-plugin.version>1.10.29</cargo-maven3-plugin.version>
+    <cargo.container.id>tomcat10x</cargo.container.id>
+    <cargo.tomcat.version>10.1.61</cargo.tomcat.version>
+    <cargo.tomcat.download.url><![CDATA[https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo.tomcat.version}/tomcat-${cargo.tomcat.version}.zip]]></cargo.tomcat.download.url>
+    <cargo.servlet.port>8080</cargo.servlet.port>
+    <cargo.jvmargs><![CDATA[
+      -Dfile.encoding=UTF-8
+      --add-opens=java.base/java.lang=ALL-UNNAMED
+      --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+    ]]></cargo.jvmargs>
+    <cargo.context.path>/</cargo.context.path>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>${jakarta-servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
+      <version>${jakarta-servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet.jsp.jstl</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+      <version>${jakarta-servlet-jsp-jstl-api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+      <version>${jakarta-servlet-jsp-jstl.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sargue</groupId>
+      <artifactId>java-time-jsptags</artifactId>
+      <version>2.0.2</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <!-- The war file name is created as artifactId.war -->
+    <finalName>${project.artifactId}</finalName>
+    <pluginManagement>
+      <plugins>
+        <!-- 
+        💡기본 페이즈에 대한 플러그인 버전에 대해서는
+         Maven 4.0.0 에 맞는 최신 플러그인 버전을 쓰도록 일단은 버전정의를 하지 말아보자!
+        -->
+        <!--
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>${maven-clean-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven-resources-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>${maven-war-plugin.version}</version>
+        </plugin>
+        -->
+        <plugin>
+          <groupId>org.codehaus.cargo</groupId>
+          <artifactId>cargo-maven3-plugin</artifactId>
+          <version>${cargo-maven3-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven3-plugin</artifactId>
+        <configuration>
+          <container>
+            <containerId>${cargo.container.id}</containerId>
+            <type>installed</type>
+            <zipUrlInstaller>
+              <url>${cargo.tomcat.download.url}</url>
+            </zipUrlInstaller>
+          </container>
+          <configuration>
+            <properties>
+              <cargo.servlet.port>${cargo.servlet.port}</cargo.servlet.port>
+              <cargo.jvmargs>${cargo.jvmargs}</cargo.jvmargs>
+            </properties>
+          </configuration>
+          <deployables>
+            <deployable>
+              <properties>
+                <context>${cargo.context.path}</context>
+              </properties>
+            </deployable>
+          </deployables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>
